@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>科技创新服务联盟抽奖</title>
+	<style>
+		*{ margin:0; padding:0;}
+		img { border:none;}
+		.w1000{ width:1000px; margin:0 auto;}
+		/*.w1000 img, .gl img{ display:block;width:250px;height:250px;border-radius: 50%;}*/
+		/*中奖名单*/
+		.bg_start_relative img{
+			/*width:250px;*/
+		}
+		.bg_start_absolute img{
+			position:absolute;
+			top: 270px;
+    		left: 172px;
+ 			/*transform-origin:45px 80px; */ /*重新设定位置中心*/
+ 			transform-origin:47.5px 76.5px;
+		}
+		button{padding:2px 8px;}
+		.action{text-align:center; padding:10px; border-bottom:dashed 1px #ccc;}
+		#rightDemo{width:257px; padding:10px;position:absolute; left:95px; top:90px;}
+		#rightDemo li{ color:#825a00; font-size:13px;width:257px;}
+		ul{ height:335px; overflow:hidden;}
+		ul li{line-height:30px; height:30px; overflow:hidden; list-style:none; padding:0; margin:0;}
+		/*页面样式*/
+		.box_11{ background:url(http://www.sansejin.com.cn/themes/laboci_2012/images/sales201308/box_r11_bg.jpg) no-repeat center center;}
+		.gl{ background:#ddd;}
+		/*转盘样式*/
+		#main{width:1000px; min-height:600px; margin:0 auto;}
+		.demo{width:1000px;position:relative; margin:0 auto; zoom:1;}
+		#disk{width:1000px;
+			  /*background:url(kjfwlm_bg.png) no-repeat;*/
+			  background-size:100%;}
+		#start{width:111px; height:212px; position:absolute; top:100px; left:250px;}
+		#start img{cursor:pointer}
+	</style>
+	<script src="jquery-1.11.1.min.js"></script>
+	<!-- <script src="http://lib.sinaapp.com/js/jquery/2.0.2/jquery-2.0.2.min.js">
+	<!-- <script type="text/javascript" src="http://www.helloweba.com/demo/js/jquery.js"></script> --> 
+    <script type="text/javascript" src="http://www.helloweba.com/demo/lottery/jQueryRotate.2.2.js"></script>
+	<script type="text/javascript" src="http://www.helloweba.com/demo/lottery/jquery.easing.min.js"></script>
+	<script>
+	$(function(){ 
+		  var sUserAgent = navigator.userAgent.toLowerCase();
+	      var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+	      var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+	      var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+	      var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+	      var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+	      var bIsAndroid = sUserAgent.match(/android/i) == "android";
+	      var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+	      var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+	      //区分移动端pc触发事件
+	      if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
+		        $("#startbtn").on('tap',function(){ 
+		        	lottery(); 
+		    	}); 
+	        }else{
+		        $("#startbtn").on('click',function(){ 
+		        	lottery(); 
+		    	}); 
+	     }
+	}); 
+	function lottery(){ 
+	    $.ajax({ 
+	        type: 'POST', 
+	        url: 'dataphp.php', 
+	        dataType: 'json', 
+	        cache: false, 
+	        xhrFields:{
+	        	widthCredentials:true
+	        },
+	        crossDomain:true,
+	        error: function(XMLHttpRequest,textStatus,errorThrown){ 
+	            alert('对不起,您已抽过!'); 
+	            console.log(XMLHttpRequest, textStatus, errorThrown);
+	            return false; 
+	        }, 
+	        success:function(json){ 
+	            $("#startbtn").unbind('click').css("cursor","default"); 
+	            var a = json.angle; 
+	            var p = json.prize;
+	            console.log(json);
+	            $("#startbtn").rotate({ 
+	                duration:3000, //转动时间 
+	                angle: 0, //默认角度
+	                animateTo:1800+a, //转动角度 
+	                easing: $.easing.easeOutSine, 
+	                callback: function(){ 	              
+		                    // if(true){
+		                    	if(a <= 109){
+		                    		alert('恭喜你，抽中'+'"'+p+'"!'); 
+			                    	var isTouckok = confirm('请去登记领取');
+			                    	if(isTouckok == true){
+			                    		var content = encodeURI(encodeURI(p));                
+			                    		window.location.href='test_login.php'+"?content="+content;
+			                    	}  	
+		                    	}else{
+		                    		alert('很遗憾，你只得到安慰奖!');	             		
+		                    	}	                    	                                
+	                } 
+	            }); 
+	        } 
+	    }); 
+	}	
+	</script>
+</head>
+<body>
+	<div class="gl">
+<!--抽奖区域[-->
+<div class="gl">
+<div class="box_11">
+<!--抽奖转盘[-->
+<div class="demo">
+     <div id="disk">
+     </div>
+     <div id="start">
+     	<div class="bg_start_relative"><img src="bg_color.png" alt="抽奖幕布"/></div>
+     	<div class="bg_start_absolute"><img src="chat_one.png" alt="点击抽奖"  id="startbtn"></div>
+     </div>
+     <!--中奖名单[-->
+     <div id="rightDemo">
+            <ul id="rightBox">
+            	<!-- <li>手机尾号为***7884的用户抽中100元现金券大礼包</li>
+                <li>手机尾号为***7884的用户抽中100元现金券大礼包</li>
+	            <li>手机尾号为***0573的用户抽中大奖iphone8</li> -->
+	        </ul>
+	     </div>
+	     <!--]end 中奖名单-->
+	</div>
+	<!--]end 抽奖转盘-->
+	</div>
+	</div>
+	<script>
+	function maquer(){
+	    setInterval(function(){
+	        $('#rightBox li:first').animate({'height':'0','opacity': '0'}, 'slow', function() {
+	          $(this).removeAttr('style').insertAfter('#rightBox li:last');
+	        });
+	    },1000);
+	    $(this).attr('disabled',true);
+	    return;
+	}
+maquer();
+	</script>
+</body>
+</html>
